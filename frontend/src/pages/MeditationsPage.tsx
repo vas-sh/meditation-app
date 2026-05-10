@@ -1,5 +1,6 @@
-import { Alert, Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Alert, Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api/client";
 import MeditationCard, { type MeditationItem } from "../components/MeditationCard";
 
 export default function MeditationsPage() {
@@ -8,7 +9,7 @@ export default function MeditationsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/meditations")
+    apiFetch("/meditations")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load meditations");
@@ -28,10 +29,23 @@ export default function MeditationsPage() {
 
   return (
     <Stack spacing={3}>
-      <Typography variant="h4">Meditations</Typography>
-      <Typography color="text.secondary">
-        This page fetches mock data from the Go backend and displays meditation cards.
-      </Typography>
+      <Paper
+        elevation={0}
+        sx={{
+          p: { xs: 3, md: 4 },
+          borderRadius: 6,
+          border: "1px solid rgba(29,92,84,0.08)",
+          background: "rgba(255,255,255,0.72)",
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <Stack spacing={1}>
+          <Typography variant="h4">Meditations</Typography>
+          <Typography color="text.secondary">
+            Browse your available sessions and choose the right practice for this moment.
+          </Typography>
+        </Stack>
+      </Paper>
 
       {loading && <CircularProgress />}
       {error && <Alert severity="error">{error}</Alert>}

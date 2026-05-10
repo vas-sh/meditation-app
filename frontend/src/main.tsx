@@ -7,25 +7,54 @@ import App from "./App";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2f6f64",
+      main: "#1d5c54",
     },
     secondary: {
-      main: "#f2b880",
+      main: "#e9b06d",
+    },
+    text: {
+      primary: "#17302c",
+      secondary: "#56706a",
     },
     background: {
-      default: "#f7f5f0",
+      default: "#f4efe7",
     },
   },
   shape: {
-    borderRadius: 16,
+    borderRadius: 22,
   },
   typography: {
-    fontFamily: '"Segoe UI", sans-serif',
+    fontFamily: '"Trebuchet MS", "Segoe UI", sans-serif',
+    h2: {
+      fontWeight: 800,
+      letterSpacing: "-0.03em",
+    },
     h3: {
+      fontWeight: 800,
+      letterSpacing: "-0.03em",
+    },
+    h4: {
       fontWeight: 700,
     },
     h5: {
       fontWeight: 600,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 999,
+          paddingInline: 18,
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 24,
+        },
+      },
     },
   },
 });

@@ -1,33 +1,36 @@
 import { Alert, Box, Button, Card, CardContent, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { register } from "../api/auth";
 import { isAuthenticated } from "../utils/auth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate("/meditations");
+      navigate("/");
     }
   }, [navigate]);
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     setError("");
+    setSuccess("");
     setLoading(true);
 
     try {
-      const data = await login(email, password);
-
-      localStorage.setItem("token", data.token);
-      navigate("/meditations");
+      await register(email, password);
+      setSuccess("Registration successful. You can now log in.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 700);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Login failed";
+      const message = err instanceof Error ? err.message : "Register failed";
       setError(message);
     } finally {
       setLoading(false);
@@ -47,11 +50,12 @@ export default function LoginPage() {
     >
       <CardContent>
         <Stack spacing={3}>
-          <Typography variant="h4">Login</Typography>
+          <Typography variant="h4">Register</Typography>
           <Typography color="text.secondary">
-            Sign in to save meditation sessions and access protected backend endpoints.
+            Create a new account to save meditation sessions and access protected actions.
           </Typography>
           {error && <Alert severity="error">{error}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
           <TextField
             label="Email"
             type="email"
@@ -71,18 +75,18 @@ export default function LoginPage() {
               variant="contained"
               color="primary"
               sx={{ textTransform: "none", fontWeight: 700 }}
-              onClick={handleLogin}
+              onClick={handleRegister}
               disabled={loading}
             >
-              Sign in
+              Create account
             </Button>
             <Button
               component={Link}
-              to="/register"
+              to="/login"
               variant="outlined"
               sx={{ textTransform: "none", fontWeight: 700 }}
             >
-              Create account
+              Go to login
             </Button>
           </Box>
         </Stack>
