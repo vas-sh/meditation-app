@@ -50,6 +50,9 @@ export default function Header() {
             <Typography variant="h6" color="primary" fontWeight={800} lineHeight={1}>
               Meditation App
             </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Breathe. Reset. Continue.
+            </Typography>
           </Box>
         </Box>
 

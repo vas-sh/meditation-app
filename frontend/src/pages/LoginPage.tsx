@@ -2,7 +2,7 @@ import { Alert, Box, Button, Card, CardContent, Stack, TextField, Typography } f
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
-import { isAuthenticated } from "../utils/auth";
+import { isAuthenticated, setStoredUser } from "../utils/auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ export default function LoginPage() {
       const data = await login(email, password);
 
       localStorage.setItem("token", data.token);
+      setStoredUser(data.user);
       navigate("/meditations");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Login failed";

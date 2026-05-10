@@ -41,6 +41,7 @@ func main() {
 	sessionService := services.NewSessionService(sessionRepository, meditationRepository)
 
 	authHandler := handlers.NewAuthHandler(authService)
+	userHandler := handlers.NewUserHandler(authService)
 	meditationHandler := handlers.NewMeditationHandler(meditationService)
 	sessionHandler := handlers.NewSessionHandler(sessionService)
 
@@ -65,6 +66,10 @@ func main() {
 		protected := api.Group("/")
 		protected.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 		{
+			protected.GET("/users/me", userHandler.GetMe)
+			protected.PUT("/users/me", userHandler.UpdateMe)
+			protected.DELETE("/users/me", userHandler.DeleteMe)
+
 			protected.POST("/sessions", sessionHandler.Create)
 			protected.GET("/sessions/me", sessionHandler.ListMine)
 		}

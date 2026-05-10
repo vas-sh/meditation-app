@@ -13,6 +13,8 @@ type UserRepository interface {
 	Create(ctx context.Context, user *models.User) error
 	GetByEmail(ctx context.Context, email string) (*models.User, error)
 	GetByID(ctx context.Context, id string) (*models.User, error)
+	UpdateEmail(ctx context.Context, id, email string) error
+	Delete(ctx context.Context, id string) error
 }
 
 type userRepository struct {
@@ -69,4 +71,22 @@ func (r *userRepository) GetByID(ctx context.Context, id string) (*models.User, 
 	}
 
 	return &user, nil
+}
+
+func (r *userRepository) UpdateEmail(ctx context.Context, id, email string) error {
+	query := `
+		UPDATE users
+		SET email = $2
+		WHERE id = $1
+	`
+
+	_, err := r.pool.Exec(ctx, query, id, email)
+	return err
+}
+
+func (r *userRepository) Delete(ctx context.Context, id string) error {
+	query := `DELETE FROM users WHERE id = $1`
+
+	_, err := r.pool.Exec(ctx, query, id)
+	return err
 }

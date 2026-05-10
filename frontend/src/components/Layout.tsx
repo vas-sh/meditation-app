@@ -34,7 +34,7 @@ export default function Layout({ children }: PropsWithChildren) {
       }}
     >
       <Header />
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 }, position: "relative", zIndex: 1 }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 }, position: "relative", zIndex: 1 }}>
         {children}
       </Container>
     </Box>

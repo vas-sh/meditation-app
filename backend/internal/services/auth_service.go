@@ -16,11 +16,15 @@ import (
 var (
 	ErrInvalidCredentials = errors.New("invalid email or password")
 	ErrUserExists         = errors.New("user with this email already exists")
+	ErrUserNotFound       = errors.New("user not found")
 )
 
 type AuthService interface {
 	Register(ctx context.Context, email, password string) (*models.User, error)
 	Login(ctx context.Context, email, password string) (string, *models.User, error)
+	GetMe(ctx context.Context, userID string) (*models.User, error)
+	UpdateEmail(ctx context.Context, userID, email string) (*models.User, error)
+	DeleteAccount(ctx context.Context, userID string) error
 }
 
 type authService struct {
@@ -95,4 +99,49 @@ func (s *authService) Login(ctx context.Context, email, password string) (string
 	}
 
 	return token, user, nil
+}
+
+func (s *authService) GetMe(ctx context.Context, userID string) (*models.User, error) {
+	user, err := s.users.GetByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	return user, nil
+}
+
+func (s *authService) UpdateEmail(ctx context.Context, userID, email string) (*models.User, error) {
+	email = strings.TrimSpace(strings.ToLower(email))
+	if !strings.Contains(email, "@") {
+		return nil, errors.New("valid email is required")
+	}
+
+	existing, err := s.users.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+	if existing != nil && existing.ID != userID {
+		return nil, ErrUserExists
+	}
+
+	if err := s.users.UpdateEmail(ctx, userID, email); err != nil {
+		return nil, err
+	}
+
+	return s.GetMe(ctx, userID)
+}
+
+func (s *authService) DeleteAccount(ctx context.Context, userID string) error {
+	user, err := s.users.GetByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		return ErrUserNotFound
+	}
+
+	return s.users.Delete(ctx, userID)
 }

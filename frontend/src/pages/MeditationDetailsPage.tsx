@@ -2,6 +2,9 @@ import { Alert, Button, Card, CardContent, CircularProgress, Stack, Typography }
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiFetch } from "../api/client";
+import MeditationPlayer from "../components/meditation/MeditationPlayer";
+import AppContainer from "../components/ui/AppContainer";
+import PageHeader from "../components/ui/PageHeader";
 import type { MeditationItem } from "../components/MeditationCard";
 import { isAuthenticated } from "../utils/auth";
 
@@ -14,6 +17,7 @@ export default function MeditationDetailsPage() {
   const [sessionMessage, setSessionMessage] = useState("");
   const [sessionError, setSessionError] = useState("");
   const [starting, setStarting] = useState(false);
+  const [playerOpen, setPlayerOpen] = useState(false);
 
   useEffect(() => {
     apiFetch(`/meditations/${id}`)
@@ -34,7 +38,7 @@ export default function MeditationDetailsPage() {
       });
   }, [id]);
 
-  const handleStartMeditation = async () => {
+  const handleOpenMeditation = async () => {
     if (!meditation) {
       return;
     }
@@ -44,6 +48,10 @@ export default function MeditationDetailsPage() {
       return;
     }
 
+    setPlayerOpen(true);
+  };
+
+  const handleSaveSession = async (meditationId: string, durationMinutes: number) => {
     setSessionMessage("");
     setSessionError("");
     setStarting(true);
@@ -52,8 +60,8 @@ export default function MeditationDetailsPage() {
       const response = await apiFetch("/sessions", {
         method: "POST",
         body: JSON.stringify({
-          meditationId: meditation.id,
-          durationMinutes: meditation.durationMinutes,
+          meditationId,
+          durationMinutes,
         }),
       });
 
@@ -66,6 +74,7 @@ export default function MeditationDetailsPage() {
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to save session";
       setSessionError(message);
+      throw new Error(message);
     } finally {
       setStarting(false);
     }
@@ -84,45 +93,67 @@ export default function MeditationDetailsPage() {
   }
 
   return (
-    <Card
-      sx={{
-        maxWidth: 760,
-        border: "1px solid rgba(29,92,84,0.08)",
-        background: "rgba(255,255,255,0.90)",
-        boxShadow: "0 22px 42px rgba(29,92,84,0.12)",
-      }}
-    >
-      <CardContent>
-        <Stack spacing={2.5}>
-          <Typography variant="h4">{meditation.title}</Typography>
-          <Typography color="text.secondary">Category: {meditation.category}</Typography>
-          <Typography color="text.secondary">
-            Duration: {meditation.durationMinutes} minutes
-          </Typography>
-          <Typography>
-            {meditation.description ?? "Detailed description can be added later in the full version."}
-          </Typography>
-          {sessionMessage && <Alert severity="success">{sessionMessage}</Alert>}
-          {sessionError && <Alert severity="error">{sessionError}</Alert>}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleStartMeditation}
-            disabled={starting}
-            sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700 }}
+    <AppContainer>
+      <Stack spacing={3}>
+        <PageHeader
+          eyebrow={meditation.category}
+          title={meditation.title}
+          description="Enter a focused meditation mode with a breathing guide, timer and session saving."
+        />
+
+        {playerOpen ? (
+          <MeditationPlayer
+            meditationId={meditation.id}
+            meditationTitle={meditation.title}
+            category={meditation.category}
+            durationMinutes={meditation.durationMinutes}
+            onClose={() => setPlayerOpen(false)}
+            onSaveSession={handleSaveSession}
+          />
+        ) : (
+          <Card
+            sx={{
+              maxWidth: 820,
+              border: "1px solid rgba(29,92,84,0.08)",
+              background: "rgba(255,255,255,0.90)",
+              boxShadow: "0 22px 42px rgba(29,92,84,0.12)",
+            }}
           >
-            Start Meditation
-          </Button>
-          <Button
-            component={Link}
-            to="/meditations"
-            variant="outlined"
-            sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700 }}
-          >
-            Back to list
-          </Button>
-        </Stack>
-      </CardContent>
-    </Card>
+            <CardContent>
+              <Stack spacing={2.5}>
+                <Typography color="text.secondary">Category: {meditation.category}</Typography>
+                <Typography color="text.secondary">
+                  Duration: {meditation.durationMinutes} minutes
+                </Typography>
+                <Typography>
+                  {meditation.description ?? "Detailed description can be added later in the full version."}
+                </Typography>
+                {sessionMessage && <Alert severity="success">{sessionMessage}</Alert>}
+                {sessionError && <Alert severity="error">{sessionError}</Alert>}
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenMeditation}
+                    disabled={starting}
+                    sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700 }}
+                  >
+                    Start Meditation
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/meditations"
+                    variant="outlined"
+                    sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700 }}
+                  >
+                    Back to list
+                  </Button>
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+        )}
+      </Stack>
+    </AppContainer>
   );
 }
