@@ -21,7 +21,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 22,
+    borderRadius: 14,
   },
   typography: {
     fontFamily: '"Trebuchet MS", "Segoe UI", sans-serif',
@@ -44,7 +44,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 999,
+          borderRadius: 14,
           paddingInline: 18,
         },
       },
@@ -52,7 +52,7 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 24,
+          borderRadius: 18,
         },
       },
     },

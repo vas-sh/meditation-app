@@ -4,6 +4,7 @@ import PsychologyAltRoundedIcon from "@mui/icons-material/PsychologyAltRounded";
 import SpaRoundedIcon from "@mui/icons-material/SpaRounded";
 import { Box, Button, Card, CardActions, CardContent, Chip, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import type { BreathingStep } from "./meditation/BreathingGuide";
 
 export type MeditationItem = {
   id: string;
@@ -11,6 +12,17 @@ export type MeditationItem = {
   category: string;
   durationMinutes: number;
   description?: string;
+  steps?: BreathingStep[];
+  images?: MeditationImage[];
+  createdAt?: string;
+};
+
+export type MeditationImage = {
+  id: string;
+  meditationId: string;
+  imageUrl: string;
+  altText?: string;
+  sortOrder: number;
   createdAt?: string;
 };
 
@@ -48,6 +60,7 @@ const categoryMeta: Record<string, { icon: JSX.Element; caption: string; accent:
 
 export default function MeditationCard({ meditation }: Props) {
   const meta = categoryMeta[meditation.category] ?? categoryMeta.relaxation;
+  const primaryImage = meditation.images?.[0];
 
   return (
     <Card
@@ -63,6 +76,19 @@ export default function MeditationCard({ meditation }: Props) {
         },
       }}
     >
+      {primaryImage && (
+        <Box
+          sx={{
+            height: 196,
+            backgroundImage: `linear-gradient(180deg, rgba(10,24,24,0.08), rgba(10,24,24,0.22)), url('${primaryImage.imageUrl}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            borderTopLeftRadius: "inherit",
+            borderTopRightRadius: "inherit",
+          }}
+          aria-label={primaryImage.altText ?? meditation.title}
+        />
+      )}
       <CardContent>
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
           <Chip label={meditation.category} color="primary" variant="outlined" />
@@ -89,7 +115,7 @@ export default function MeditationCard({ meditation }: Props) {
         </Typography>
 
         <Typography color="text.secondary">
-          {meditation.description ?? "Simple mock meditation description for the demo UI."}
+          {meditation.description ?? "Guided meditation session description is not available yet."}
         </Typography>
       </CardContent>
 

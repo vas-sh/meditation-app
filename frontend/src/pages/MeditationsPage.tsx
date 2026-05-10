@@ -68,7 +68,7 @@ export default function MeditationsPage() {
             elevation={0}
             sx={{
               p: 3,
-              borderRadius: 6,
+              borderRadius: 4,
               border: "1px solid rgba(29,92,84,0.08)",
               background: "rgba(255,255,255,0.82)",
               boxShadow: "0 14px 32px rgba(29,92,84,0.06)",
@@ -80,7 +80,7 @@ export default function MeditationsPage() {
                   sx={{
                     width: 42,
                     height: 42,
-                    borderRadius: "14px",
+                    borderRadius: "12px",
                     display: "grid",
                     placeItems: "center",
                     background: "linear-gradient(135deg, rgba(29,92,84,0.12), rgba(125,181,167,0.18))",
@@ -116,7 +116,7 @@ export default function MeditationsPage() {
             elevation={0}
             sx={{
               p: 3,
-              borderRadius: 6,
+              borderRadius: 4,
               border: "1px solid rgba(29,92,84,0.08)",
               background: "linear-gradient(180deg, rgba(29,92,84,0.98), rgba(47,111,100,0.92))",
               color: "white",
@@ -129,7 +129,7 @@ export default function MeditationsPage() {
                   sx={{
                     width: 42,
                     height: 42,
-                    borderRadius: "14px",
+                    borderRadius: "12px",
                     display: "grid",
                     placeItems: "center",
                     background: "rgba(255,255,255,0.12)",
@@ -202,7 +202,7 @@ export default function MeditationsPage() {
                 elevation={0}
                 sx={{
                   p: 2.5,
-                  borderRadius: 5,
+                  borderRadius: 4,
                   border: "1px solid rgba(29,92,84,0.08)",
                   background: "rgba(255,255,255,0.82)",
                 }}
@@ -212,7 +212,7 @@ export default function MeditationsPage() {
                     sx={{
                       width: 38,
                       height: 38,
-                      borderRadius: "12px",
+                      borderRadius: "10px",
                       display: "grid",
                       placeItems: "center",
                       background: "linear-gradient(135deg, rgba(29,92,84,0.12), rgba(125,181,167,0.18))",

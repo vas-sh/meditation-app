@@ -7,13 +7,14 @@ import SpaRoundedIcon from "@mui/icons-material/SpaRounded";
 import { Alert, Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import BreathingGuide, { type BreathingStep } from "./BreathingGuide";
-import { findMeditationScenario } from "../../data/meditations";
 
 type Props = {
   meditationId: string;
   meditationTitle: string;
   category: string;
+  meditationDescription?: string;
   durationMinutes: number;
+  steps?: BreathingStep[];
   onClose: () => void;
   onSaveSession: (meditationId: string, durationMinutes: number) => Promise<void>;
 };
@@ -33,11 +34,12 @@ export default function MeditationPlayer({
   meditationId,
   meditationTitle,
   category,
+  meditationDescription,
   durationMinutes,
+  steps = [],
   onClose,
   onSaveSession,
 }: Props) {
-  const scenario = findMeditationScenario(meditationTitle, category);
   const iconByCategory: Record<string, JSX.Element> = {
     breathing: <AirRoundedIcon fontSize="small" />,
     relaxation: <SpaRoundedIcon fontSize="small" />,
@@ -45,20 +47,31 @@ export default function MeditationPlayer({
     sleep: <DarkModeRoundedIcon fontSize="small" />,
     stress: <AccessibilityNewRoundedIcon fontSize="small" />,
   };
+  const programSteps =
+    steps.length > 0
+      ? steps
+      : [
+          {
+            text: "Settle in",
+            duration: 1,
+            phase: "steady" as const,
+            supportText: "This meditation does not have guided steps configured yet.",
+          },
+        ];
   const program = {
     label:
-      scenario.category === "sleep"
+      category === "sleep"
         ? "Sleep wind-down"
-        : scenario.category === "focus"
+        : category === "focus"
           ? "Focus training"
-          : scenario.category === "stress"
+          : category === "stress"
             ? "Stress reset"
-            : scenario.category === "breathing"
+            : category === "breathing"
               ? "Breath rhythm"
               : "Relaxation flow",
-    intro: scenario.description,
-    icon: iconByCategory[scenario.category] ?? <SpaRoundedIcon fontSize="small" />,
-    steps: scenario.steps,
+    intro: meditationDescription ?? "Guided meditation session.",
+    icon: iconByCategory[category] ?? <SpaRoundedIcon fontSize="small" />,
+    steps: programSteps,
   };
   const totalSeconds = durationMinutes * 60;
   const [remainingSeconds, setRemainingSeconds] = useState(totalSeconds);

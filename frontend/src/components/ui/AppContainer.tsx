@@ -6,7 +6,7 @@ export default function AppContainer({ children }: PropsWithChildren) {
     <Box
       sx={{
         width: "100%",
-        maxWidth: 1120,
+        maxWidth: 1280,
         mx: "auto",
       }}
     >

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ func NewMeditationHandler(service services.MeditationService) *MeditationHandler
 func (h *MeditationHandler) List(c *gin.Context) {
 	items, err := h.service.List(c.Request.Context())
 	if err != nil {
+		log.Printf("load meditations: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load meditations"})
 		return
 	}
@@ -29,6 +31,7 @@ func (h *MeditationHandler) List(c *gin.Context) {
 func (h *MeditationHandler) GetByID(c *gin.Context) {
 	item, err := h.service.GetByID(c.Request.Context(), c.Param("id"))
 	if err != nil {
+		log.Printf("load meditation by id: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load meditation"})
 		return
 	}

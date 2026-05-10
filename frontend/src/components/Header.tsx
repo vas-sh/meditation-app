@@ -21,7 +21,7 @@ export default function Header() {
       <Toolbar
         sx={{
           mt: 2,
-          borderRadius: 999,
+          borderRadius: 5,
           backdropFilter: "blur(18px)",
           backgroundColor: "rgba(255,255,255,0.72)",
           border: "1px solid rgba(29,92,84,0.10)",

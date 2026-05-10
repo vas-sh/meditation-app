@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiFetch } from "../api/client";
@@ -92,6 +92,8 @@ export default function MeditationDetailsPage() {
     return <Alert severity="warning">Meditation not found.</Alert>;
   }
 
+  const primaryImage = meditation.images?.[0];
+
   return (
     <AppContainer>
       <Stack spacing={3}>
@@ -106,7 +108,9 @@ export default function MeditationDetailsPage() {
             meditationId={meditation.id}
             meditationTitle={meditation.title}
             category={meditation.category}
+            meditationDescription={meditation.description}
             durationMinutes={meditation.durationMinutes}
+            steps={meditation.steps}
             onClose={() => setPlayerOpen(false)}
             onSaveSession={handleSaveSession}
           />
@@ -119,6 +123,17 @@ export default function MeditationDetailsPage() {
               boxShadow: "0 22px 42px rgba(29,92,84,0.12)",
             }}
           >
+            {primaryImage && (
+              <Box
+                sx={{
+                  height: { xs: 220, md: 300 },
+                  backgroundImage: `linear-gradient(180deg, rgba(10,24,24,0.08), rgba(10,24,24,0.18)), url('${primaryImage.imageUrl}')`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                aria-label={primaryImage.altText ?? meditation.title}
+              />
+            )}
             <CardContent>
               <Stack spacing={2.5}>
                 <Typography color="text.secondary">Category: {meditation.category}</Typography>
